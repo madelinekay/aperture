@@ -1,12 +1,9 @@
-import type { NextPage } from "next";
-import Head from "next/head";
-import styles from "../styles/Home.module.css";
-
-import { useFormik } from "formik";
-import Button from "@material-ui/core/Button";
+import { NextPage } from "next";
 import TextField from "@material-ui/core/TextField";
-import { makeStyles } from "@material-ui/core/styles";
+import { useFormik } from "formik";
 import * as yup from "yup";
+import Button from "@material-ui/core/Button";
+import { makeStyles } from "@material-ui/core/styles";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
@@ -20,34 +17,37 @@ const useStyles = makeStyles({
 const validationSchema = yup.object({
   email: yup
     .string()
-    .email("Enter a valid email")
+    .email("Enter a valid email or mobile number")
     .required("Email is required"),
+  username: yup.string().required("Username is required").max(16),
   password: yup
     .string()
     .min(8, "Password should be of minimum 8 characters length")
     .required("Password is required"),
 });
 
-const Home: NextPage = () => {
+const Signup: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
-
   const classes = useStyles();
+  const router = useRouter();
 
   const formik = useFormik({
     initialValues: {
       email: "",
+      username: "",
       password: "",
     },
     validationSchema: validationSchema,
+
     onSubmit: (values) => {
-      console.log("log in");
+      console.log("sign up");
       const enteredEmail = values.email;
+      const enteredUsername = values.username;
       const enteredPassword = values.password;
       setIsLoading(true);
 
       fetch(
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyB8ONxO_Vjxt1HO8DKeoqcsV8ExTUsqof4",
+        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB8ONxO_Vjxt1HO8DKeoqcsV8ExTUsqof4",
         {
           method: "POST",
           body: JSON.stringify({
@@ -90,23 +90,14 @@ const Home: NextPage = () => {
   });
 
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Aperture</title>
-        <meta
-          name="description"
-          content="Share photos with family &amp; friends instantly, send likes back "
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
+    <div>
       <form onSubmit={formik.handleSubmit}>
         <h1>Aperture</h1>
         <div>
           <TextField
             id="email"
             name="email"
-            placeholder="Email, phone number or username"
+            placeholder="Email or phone number"
             value={formik.values.email}
             onChange={formik.handleChange}
             error={formik.touched.email && Boolean(formik.errors.email)}
@@ -115,9 +106,20 @@ const Home: NextPage = () => {
         </div>
         <div>
           <TextField
+            id="username"
+            name="username"
+            placeholder="Username"
+            value={formik.values.username}
+            onChange={formik.handleChange}
+            error={formik.touched.username && Boolean(formik.errors.username)}
+            helperText={formik.touched.username && formik.errors.username}
+          />
+        </div>
+        <div>
+          <TextField
             id="password"
             name="password"
-            placeholder="Password"
+            placeholder="password"
             type="password"
             value={formik.values.password}
             onChange={formik.handleChange}
@@ -132,42 +134,15 @@ const Home: NextPage = () => {
             color="primary"
             type="submit"
           >
-            Log In
+            Sign Up
           </Button>
         </div>
       </form>
       <div>
-        Don't have an account yet? <Link href="/signup">Sign up</Link>
+        Already have an account? <Link href="/">Log in</Link>
       </div>
     </div>
   );
 };
 
-export default Home;
-
-// <!-- The core Firebase JS SDK is always required and must be listed first -->
-{
-  /* <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-
-<!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#available-libraries -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
-
-<script>
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  var firebaseConfig = {
-    apiKey: "AIzaSyB8ONxO_Vjxt1HO8DKeoqcsV8ExTUsqof4",
-    authDomain: "aperture-479c6.firebaseapp.com",
-    databaseURL: "https://aperture-479c6-default-rtdb.firebaseio.com",
-    projectId: "aperture-479c6",
-    storageBucket: "aperture-479c6.appspot.com",
-    messagingSenderId: "407719756458",
-    appId: "1:407719756458:web:4421b56d4a0d2168fbc6d3",
-    measurementId: "G-JRQ46M1TP5"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  firebase.analytics();
-</script> */
-}
+export default Signup;
