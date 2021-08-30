@@ -8,8 +8,9 @@ import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import * as yup from "yup";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useRouter } from "next/router";
+import AuthContext from "../store/auth-context";
 
 const useStyles = makeStyles({
   button: {
@@ -31,6 +32,8 @@ const validationSchema = yup.object({
 const Home: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
+  const ctx = useContext(AuthContext);
 
   const classes = useStyles();
 
@@ -80,8 +83,9 @@ const Home: NextPage = () => {
           const expirationTime = new Date(
             new Date().getTime() + +data.expiresIn * 1000
           ).getTime();
-          //   ctx.login(data.idToken, expirationTime);
-          router.push("/" + enteredEmail);
+
+          ctx.login(data.idToken, expirationTime);
+          router.push("/my-feed");
         })
         .catch((err) => {
           alert(err.message);

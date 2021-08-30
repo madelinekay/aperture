@@ -12,21 +12,12 @@ const firebaseConfig = {
   measurementId: "G-JRQ46M1TP5",
 };
 
-const getStorageRef = (userId: number) => {
+export const getStorageRef = (userId: number) => {
   if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
   }
   const app = firebase.apps[0];
 
-  // const getStorageRef = (userId: number) => {
-
-  //     const storageRef = firebase.storage().ref();
-  //     // const storageRef = storage.ref();
-  //     return storageRef
-  // }
   const storageRef = app.storage().ref(userId.toString());
   return storageRef;
 };
-// const storageRef = storage.ref();
-// return storageRef
-export default getStorageRef;

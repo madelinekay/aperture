@@ -5,8 +5,10 @@ import * as yup from "yup";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useRouter } from "next/router";
+import AuthContext from "../store/auth-context";
+import signup from "./api/signup";
 
 const useStyles = makeStyles({
   button: {
@@ -30,6 +32,7 @@ const Signup: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const classes = useStyles();
   const router = useRouter();
+  const ctx = useContext(AuthContext);
 
   const formik = useFormik({
     initialValues: {
@@ -39,13 +42,25 @@ const Signup: NextPage = () => {
     },
     validationSchema: validationSchema,
 
-    onSubmit: (values) => {
-      console.log("sign up");
+    onSubmit: async (values) => {
       const enteredEmail = values.email;
       const enteredUsername = values.username;
       const enteredPassword = values.password;
       setIsLoading(true);
 
+      await signup(values.email, values.username);
+
+      fetch(
+        "https://complete-walkthrough-default-rtdb.firebaseio.com/meetups.json",
+        {
+          method: "POST",
+          body: JSON.stringify(meetupData),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+
+        
       fetch(
         "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB8ONxO_Vjxt1HO8DKeoqcsV8ExTUsqof4",
         {
@@ -64,7 +79,6 @@ const Signup: NextPage = () => {
           setIsLoading(false);
 
           if (res.ok) {
-            console.log("res ok");
             return res.json();
           } else {
             return res.json().then((data) => {
@@ -80,8 +94,8 @@ const Signup: NextPage = () => {
           const expirationTime = new Date(
             new Date().getTime() + +data.expiresIn * 1000
           ).getTime();
-          //   ctx.login(data.idToken, expirationTime);
-          router.push("/" + enteredEmail);
+          ctx.login(data.idToken, expirationTime);
+          router.push("/my-feed");
         })
         .catch((err) => {
           alert(err.message);
