@@ -34,6 +34,49 @@ const Signup: NextPage = () => {
   const router = useRouter();
   const ctx = useContext(AuthContext);
 
+  const auth = (email, password) => {
+    fetch(
+      "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB8ONxO_Vjxt1HO8DKeoqcsV8ExTUsqof4",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          email: email,
+          password: password,
+          returnSecureToken: true,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((res) => {
+        setIsLoading(false);
+
+        if (res.ok) {
+          console.log("res ok");
+          return res.json();
+        } else {
+          return res.json().then((data) => {
+            let errorMessage = "Authentication failed";
+            if (data.error.message) {
+              errorMessage = data.error.message;
+            }
+            throw new Error(errorMessage);
+          });
+        }
+      })
+      .then((data) => {
+        const expirationTime = new Date(
+          new Date().getTime() + +data.expiresIn * 1000
+        ).getTime();
+        ctx.login(data.idToken, expirationTime);
+        router.push("/my-feed");
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
+  };
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -48,58 +91,23 @@ const Signup: NextPage = () => {
       const enteredPassword = values.password;
       setIsLoading(true);
 
-      await signup(values.email, values.username);
+      const signupData = await signup(values.email, values.username);
 
-      fetch(
-        "https://complete-walkthrough-default-rtdb.firebaseio.com/meetups.json",
-        {
-          method: "POST",
-          body: JSON.stringify(meetupData),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-
-        
-      fetch(
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB8ONxO_Vjxt1HO8DKeoqcsV8ExTUsqof4",
+      const storageData = await fetch(
+        "https://aperture-479c6-default-rtdb.firebaseio.com/users.json",
         {
           method: "POST",
           body: JSON.stringify({
-            email: enteredEmail,
-            password: enteredPassword,
-            returnSecureToken: true,
+            user: enteredEmail,
+            username: enteredUsername,
           }),
           headers: {
             "Content-Type": "application/json",
           },
         }
-      )
-        .then((res) => {
-          setIsLoading(false);
+      );
 
-          if (res.ok) {
-            return res.json();
-          } else {
-            return res.json().then((data) => {
-              let errorMessage = "Authentication failed";
-              if (data.error.message) {
-                errorMessage = data.error.message;
-              }
-              throw new Error(errorMessage);
-            });
-          }
-        })
-        .then((data) => {
-          const expirationTime = new Date(
-            new Date().getTime() + +data.expiresIn * 1000
-          ).getTime();
-          ctx.login(data.idToken, expirationTime);
-          router.push("/my-feed");
-        })
-        .catch((err) => {
-          alert(err.message);
-        });
+      const authData = await auth(enteredEmail, enteredPassword);
     },
   });
 
