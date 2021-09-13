@@ -8,6 +8,7 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import PublicIcon from "@material-ui/icons/Public";
 import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
+import AuthContext from "../store/auth-context";
 
 const useStyles = makeStyles((theme) => ({
   appbar: {
@@ -48,43 +49,54 @@ const useStyles = makeStyles((theme) => ({
 const MainNavigation: FC = () => {
   const { username } = useContext(UserContext);
   const classes = useStyles();
+  const { isLoggedIn } = useContext(AuthContext);
 
-  return (
-    <AppBar position="sticky" className={classes.appbar}>
-      <Toolbar className={classes.toolbar}>
-        <div className={classes.title}>Açıklık</div>
-        <div className={classes.search}>
-          <div className={classes.searchIcon}>
-            <SearchIcon />
+  if (isLoggedIn) {
+    return (
+      <AppBar position="sticky" className={classes.appbar}>
+        <Toolbar className={classes.toolbar}>
+          <div className={classes.title}>Açıklık</div>
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+            <div className={classes.input}>
+              <InputBase placeholder="ara..." />
+            </div>
           </div>
-          <div className={classes.input}>
-            <InputBase placeholder="ara..." />
-          </div>
-        </div>
 
-        <div className={classes.menu}>
-          <div className={classes.navItem}>
-            <IconButton>
-              <Link href="/my-feed">
-                <HomeIcon />
-              </Link>
-            </IconButton>
+          <div className={classes.menu}>
+            <div className={classes.navItem}>
+              <IconButton style={{ color: "black" }}>
+                <Link href="/my-feed">
+                  <HomeIcon />
+                </Link>
+              </IconButton>
+            </div>
+            <div className={classes.navItem}>
+              <IconButton style={{ color: "black" }}>
+                <Link href={"/" + username.toString()}>
+                  <FaceIcon />
+                </Link>
+              </IconButton>
+            </div>
+            <div className={classes.navItem}>
+              <IconButton style={{ color: "black" }}>
+                <FavoriteIcon />
+              </IconButton>
+            </div>
+            <div className={classes.navItem}>
+              <IconButton style={{ color: "black" }}>
+                <PublicIcon />
+              </IconButton>
+            </div>
           </div>
-          <div className={classes.navItem}>
-            <Link href={"/" + username.toString()}>
-              <FaceIcon />
-            </Link>
-          </div>
-          <div className={classes.navItem}>
-            <FavoriteIcon />
-          </div>
-          <div className={classes.navItem}>
-            <PublicIcon />
-          </div>
-        </div>
-      </Toolbar>
-    </AppBar>
-  );
+        </Toolbar>
+      </AppBar>
+    );
+  } else {
+    return null;
+  }
 };
 
 export default MainNavigation;

@@ -11,10 +11,42 @@ import Link from "next/link";
 import { useState, useContext } from "react";
 import { useRouter } from "next/router";
 import AuthContext from "../store/auth-context";
+import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
+import { CardContent } from "@material-ui/core";
 
 const useStyles = makeStyles({
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    minHeight: "100vh",
+  },
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    width: 350,
+    height: 400,
+    border: "black",
+    alignItems: "center",
+    marginBottom: 50,
+  },
+  signup: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 350,
+    height: 75,
+  },
   button: {
     width: "100%",
+    backgroundColor: "black",
+  },
+  textField: {
+    marginBottom: 20,
+    width: "100%",
+    fontSize: 8,
   },
 });
 
@@ -67,7 +99,6 @@ const Home: NextPage = () => {
           setIsLoading(false);
 
           if (res.ok) {
-            console.log("res ok");
             return res.json();
           } else {
             return res.json().then((data) => {
@@ -83,6 +114,7 @@ const Home: NextPage = () => {
           const expirationTime = new Date(
             new Date().getTime() + +data.expiresIn * 1000
           ).getTime();
+          console.log("login", data.idToken);
 
           ctx.login(data.idToken, expirationTime);
           router.push("/my-feed");
@@ -94,7 +126,7 @@ const Home: NextPage = () => {
   });
 
   return (
-    <div className={styles.container}>
+    <>
       <Head>
         <title>Aperture</title>
         <meta
@@ -103,47 +135,67 @@ const Home: NextPage = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <form onSubmit={formik.handleSubmit}>
-        <h1>Aperture</h1>
-        <div>
-          <TextField
-            id="email"
-            name="email"
-            placeholder="Email, phone number or username"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            error={formik.touched.email && Boolean(formik.errors.email)}
-            helperText={formik.touched.email && formik.errors.email}
-          />
-        </div>
-        <div>
-          <TextField
-            id="password"
-            name="password"
-            placeholder="Password"
-            type="password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            error={formik.touched.password && Boolean(formik.errors.password)}
-            helperText={formik.touched.password && formik.errors.password}
-          />
-        </div>
-        <div>
-          <Button
-            className={classes.button}
-            variant="contained"
-            color="primary"
-            type="submit"
-          >
-            Log In
-          </Button>
-        </div>
-      </form>
-      <div>
-        Don't have an account yet? <Link href="/signup">Sign up</Link>
+      <div className={classes.root}>
+        <Card className={classes.container}>
+          <CardHeader title="Aperture" style={{ marginBottom: 30 }} />
+          <CardContent style={{ width: "85%" }}>
+            <form onSubmit={formik.handleSubmit}>
+              <div>
+                <TextField
+                  className={classes.textField}
+                  id="email"
+                  name="email"
+                  variant="filled"
+                  size="small"
+                  placeholder="Email, phone number or username"
+                  value={formik.values.email}
+                  onChange={formik.handleChange}
+                  error={formik.touched.email && Boolean(formik.errors.email)}
+                  helperText={formik.touched.email && formik.errors.email}
+                />
+              </div>
+              <div>
+                <TextField
+                  className={classes.textField}
+                  variant="filled"
+                  size="small"
+                  id="password"
+                  name="password"
+                  placeholder="Password"
+                  type="password"
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
+                  error={
+                    formik.touched.password && Boolean(formik.errors.password)
+                  }
+                  helperText={formik.touched.password && formik.errors.password}
+                />
+              </div>
+              <div>
+                <Button
+                  className={classes.button}
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                >
+                  Log In
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+          <CardContent>
+            <div>Forgot password?</div>
+          </CardContent>
+        </Card>
+        <Card className={classes.signup}>
+          <CardContent>
+            <div>
+              Don't have an account yet? <Link href="/signup">Sign up</Link>
+            </div>
+          </CardContent>
+        </Card>
       </div>
-    </div>
+    </>
   );
 };
 
