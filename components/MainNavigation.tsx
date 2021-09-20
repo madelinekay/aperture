@@ -67,26 +67,26 @@ const MainNavigation: FC = () => {
 
           <div className={classes.menu}>
             <div className={classes.navItem}>
-              <IconButton style={{ color: "black" }}>
+              <IconButton color="inherit">
                 <Link href="/my-feed">
                   <HomeIcon />
                 </Link>
               </IconButton>
             </div>
             <div className={classes.navItem}>
-              <IconButton style={{ color: "black" }}>
+              <IconButton color="inherit">
                 <Link href={"/" + username.toString()}>
                   <FaceIcon />
                 </Link>
               </IconButton>
             </div>
             <div className={classes.navItem}>
-              <IconButton style={{ color: "black" }}>
+              <IconButton color="inherit">
                 <FavoriteIcon />
               </IconButton>
             </div>
             <div className={classes.navItem}>
-              <IconButton style={{ color: "black" }}>
+              <IconButton color="inherit">
                 <PublicIcon />
               </IconButton>
             </div>

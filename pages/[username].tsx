@@ -8,6 +8,7 @@ import { Hidden } from "@material-ui/core";
 const Home: NextPage = () => {
   const { images, username } = useContext(UserContext);
   const padders = Array.from(Array(3 - (images.length % 3)));
+  console.log("username", images);
 
   return (
     <div
@@ -16,7 +17,6 @@ const Home: NextPage = () => {
         flexDirection: "column",
         maxWidth: 1000,
         margin: "0 auto",
-        // borderStyle: "solid",
       }}
     >
       {/* <div>
@@ -26,7 +26,6 @@ const Home: NextPage = () => {
       </div> */}
       <div
         style={{
-          //   marginTop: '30px',
           display: "flex",
           flexDirection: "row",
           flexWrap: "wrap",
@@ -34,7 +33,7 @@ const Home: NextPage = () => {
           marginTop: 30,
         }}
       >
-        {images.map((url) => (
+        {images.map((image) => (
           <div
             style={{
               overflow: "hidden",
@@ -45,21 +44,21 @@ const Home: NextPage = () => {
             }}
           >
             <img
-              src={url}
-              key={url}
-              style={{ maxHeight: 600, maxWidth: 600 }}
+              src={image.id}
+              key={image.url}
+              // style={{ maxHeight: 600, maxWidth: 600 }}
+              //check that this code is relevant
             />
           </div>
         ))}
         {padders.map((_, index) => (
           <div
             key={index}
-            css={`
+            style={{
               maxWidth: 290,
               maxHeight: 290,
               overflow: "hidden",
-            
-            `}
+            }}
           />
         ))}
       </div>
