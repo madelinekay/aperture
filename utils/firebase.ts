@@ -12,12 +12,13 @@ const firebaseConfig = {
   measurementId: "G-JRQ46M1TP5",
 };
 
-export const getStorageRef = (userId: number) => {
+export const getStorageRef = (user: string) => {
   if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
   }
   const app = firebase.apps[0];
 
-  const storageRef = app.storage().ref(userId.toString());
+  const storageRef = app.storage().ref(user);
+  console.log("utils", user, storageRef);
   return storageRef;
 };

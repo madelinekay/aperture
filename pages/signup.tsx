@@ -123,15 +123,14 @@ const Signup: NextPage = () => {
       const enteredPassword = values.password;
       setIsLoading(true);
 
-      const signupData = await signup(values.email, values.username);
-
       const storageData = await fetch(
         "https://aperture-479c6-default-rtdb.firebaseio.com/users.json",
         {
           method: "POST",
           body: JSON.stringify({
-            user: enteredEmail,
+            userEmail: enteredEmail,
             username: enteredUsername,
+            password: enteredPassword,
           }),
           headers: {
             "Content-Type": "application/json",

@@ -20,7 +20,7 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import { makeStyles } from "@material-ui/core";
-import { FileCopyOutlined } from "@material-ui/icons";
+import router from "next/router";
 
 const useStyles = makeStyles((theme) => ({
   search: {
@@ -32,31 +32,15 @@ const useStyles = makeStyles((theme) => ({
 
 const Profile: NextPage = () => {
   const ctx = useContext(authContext);
-  const { images, username } = useContext(UserContext);
-  const userId = +username;
+  const { images, user } = useContext(UserContext);
+  console.log("myfeed", user);
+  // const userId = +usernamec
 
-  console.log(images);
   const classes = useStyles();
 
-  // const handleSelectedFile = (event: React.FormEvent) => {
-  //   const file = event.target.files[0];
-  //   const storageRef = getStorageRef(userId);
-
-  //   console.log(file);
-  //   const imageRef = storageRef.child(file.name);
-  //   const metadata = {
-  //     time: Date.now().toString(),
-  //   };
-  //   imageRef
-  //     .put(file, { customMetadata: metadata })
-  //     .then(() => console.log("uploaded", imageRef.name));
-
-  //   // uploadBytes(storageRef, file, metadata);
-  // };
-
-  const handleSelectedFile = (files) => {
+  const handleSelectedFile = async (files) => {
     const file = files[0];
-    const storageRef = getStorageRef(userId);
+    const storageRef = getStorageRef(user);
     console.log("storageref", storageRef);
     console.log("file", file);
 
@@ -64,41 +48,28 @@ const Profile: NextPage = () => {
     const metadata = {
       time: Date.now().toString(),
     };
-    imageRef
+    const image = await imageRef
       .put(file, { customMetadata: metadata })
       .then(() => console.log("uploaded", imageRef.name));
+    const imageURL = await imageRef.getDownloadURL();
 
-    // uploadBytes(storageRef, file, metadata);
+    fetch(
+      "https://aperture-479c6-default-rtdb.firebaseio.com/users/$user/images.json",
+      // "https://aperture-479c6-default-rtdb.firebaseio.com/images.json",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          url: imageURL,
+          likes: 0,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    ).then(() => {
+      router.push("/my-feed");
+    });
   };
-
-  // function MyDropzone() {
-  //   const onDrop = useCallback((event: React.FormEvent) => {
-  //     const file = event.target.files[0];
-  //     const storageRef = getStorageRef(userID);
-
-  //     const imageRef = storageRef.child(file.name);
-  //     const metadata = {
-  //       time: Date.now().toString(),
-  //     };
-  //     imageRef
-  //       .put(file, { customMetadata: metadata })
-  //       .then(() => console.log("uploaded", imageRef.name));
-  //   }, []);
-  //   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-  //     onDrop,
-  //   });
-
-  //   return (
-  //     <div {...getRootProps()}>
-  //       <input {...getInputProps()} />
-  //       {isDragActive ? (
-  //         <p>Drop the files here ...</p>
-  //       ) : (
-  //         <p>Drag 'n' drop some files here, or click to select files</p>
-  //       )}
-  //     </div>
-  //   );
-  // }
 
   return (
     <div
@@ -119,9 +90,9 @@ const Profile: NextPage = () => {
           // borderStyle: "solid",
         }}
       >
-        {images.map((url) => (
+        {images.map((image) => (
           <Card
-            key={url}
+            key={image.id}
             style={{
               display: "flex",
               flexDirection: "column",
@@ -137,7 +108,7 @@ const Profile: NextPage = () => {
                 </IconButton>
               }
             />
-            <img src={url} style={{ maxWidth: 600 }} />
+            <img src={image.url} style={{ maxWidth: 600 }} />
             <CardContent
               style={{
                 display: "flex",
@@ -192,7 +163,6 @@ const Profile: NextPage = () => {
           </Card>
         ))}
       </div>
-
       <div style={{ marginLeft: 30 }}>
         <div style={{ position: "sticky", top: 100 }}>
           <Card
@@ -224,7 +194,6 @@ const Profile: NextPage = () => {
                 </section>
               )}
             </Dropzone>
-            {/* <InputBase type="file" onChange={handleSelectedFile} /> */}
           </Card>
           <Card>
             <CardContent>

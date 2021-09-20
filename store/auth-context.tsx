@@ -1,3 +1,4 @@
+import { ClickAwayListener } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 
 let logoutTimer;
@@ -9,50 +10,61 @@ const AuthContext = React.createContext({
   logout: () => {},
 });
 
-// const calculateRemainingTime = (expirationTime) => {
-//   const currentTime = new Date().getTime(); //gettime converts to milliseconds for usecallback
+const calculateRemainingTime = (expirationTime) => {
+  const currentTime = new Date().getTime(); //gettime converts to milliseconds for usecallback
 
-//   const remainingDuration = expirationTime - currentTime; //new Date(expirationTime).getTime() for expirationTime stored in a new constant
-//   return remainingDuration;
-// };
+  const remainingDuration = expirationTime - currentTime; //new Date(expirationTime).getTime() for expirationTime stored in a new constant
+  return remainingDuration;
+};
 
-// const retrieveStoredToken = () => {
-//   const storedToken = localStorage.getItem("token");
-//   const storedExpirationTime = localStorage.getItem("expirationTime");
-//   const remainingTime = calculateRemainingTime(storedExpirationTime);
+const retrieveStoredToken = () => {
+  const storedToken = localStorage.getItem("token");
+  const storedExpirationTime = localStorage.getItem("expirationTime");
+  const remainingTime = calculateRemainingTime(storedExpirationTime);
+  console.log("remainingTime", remainingTime);
 
-//   if (remainingTime <= 6000) {
-//     localStorage.clear();
-//     return null;
-//   }
-//   return {
-//     token: storedToken,
-//     remainingTime,
-//   };
-// };
+  if (remainingTime <= 59 * 60 * 1000) {
+    console.log("localStorage (pre)", localStorage);
+    localStorage.clear();
+    console.log("localStorage (post)", localStorage);
+    // window.location.href = "/";
+    return null;
+  }
+  return {
+    token: storedToken,
+    remainingTime,
+  };
+};
 
 // export const AuthContextProvider = (props) => <>{props.children}</>;
 
 export const AuthContextProvider = (props) => {
-  // const tokenData = retrieveStoredToken();
-  let initialToken;
-  // if (tokenData) {
-  //   initialToken = tokenData.token;
-  // }
+  const ssr = typeof window === "undefined";
+  if (ssr) {
+    return props.children;
+  }
 
-  // const [token, setToken] = useState(initialToken);
-  const [token, setToken] = useState(null);
+  const tokenData = retrieveStoredToken();
+  let initialToken;
+  if (tokenData) {
+    initialToken = tokenData.token;
+  }
+
+  const [token, setToken] = useState(initialToken);
+  // const [token, setToken] = useState(null);
 
   const isLoggedIn = !!token;
 
-  // const handleLogout = () => {
-  //   setToken(null);
-  //   localStorage.clear();
+  const handleLogout = () => {
+    setToken(null);
+    localStorage.clear();
 
-  //   if (logoutTimer) {
-  //     clearTimeout(logoutTimer);
-  //   }
-  // };
+    if (logoutTimer) {
+      clearTimeout(logoutTimer);
+    }
+
+    window.location.href = "/";
+  };
 
   const handleLogin = (token, expirationTime) => {
     setToken(token);
@@ -62,19 +74,19 @@ export const AuthContextProvider = (props) => {
     const storedToken = localStorage.getItem("token");
     console.log("storedtoken", storedToken);
 
-    // const remainingTime = calculateRemainingTime(expirationTime);
+    const remainingTime = calculateRemainingTime(expirationTime);
 
-    // logoutTimer = setTimeout(handleLogout, remainingTime);
+    logoutTimer = setTimeout(handleLogout, remainingTime);
   };
 
   console.log("token", token);
 
-  // useEffect(() => {
-  //   if (tokenData) {
-  //     console.log("useEffect", tokenData.remainingTime);
-  //     logoutTimer = setTimeout(handleLogout, tokenData.remainingTime);
-  //   }
-  // }, [tokenData]);
+  useEffect(() => {
+    if (tokenData) {
+      console.log("useEffect", tokenData.remainingTime);
+      logoutTimer = setTimeout(handleLogout, tokenData.remainingTime);
+    }
+  }, [tokenData]);
 
   const contextValue = {
     token,

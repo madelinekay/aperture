@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
 
 import { useFormik } from "formik";
 import Button from "@material-ui/core/Button";
@@ -14,6 +13,7 @@ import AuthContext from "../store/auth-context";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import { CardContent } from "@material-ui/core";
+import UserContext from "../store/user-context";
 
 const useStyles = makeStyles({
   root: {
@@ -64,15 +64,15 @@ const validationSchema = yup.object({
 const Home: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-
+  const userContext = useContext(UserContext);
   const ctx = useContext(AuthContext);
 
   const classes = useStyles();
 
   const formik = useFormik({
     initialValues: {
-      email: "",
-      password: "",
+      email: "aperture@aperture.com",
+      password: "aperture",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -114,9 +114,9 @@ const Home: NextPage = () => {
           const expirationTime = new Date(
             new Date().getTime() + +data.expiresIn * 1000
           ).getTime();
-          console.log("login", data.idToken);
-
           ctx.login(data.idToken, expirationTime);
+          console.log("index fetch");
+          userContext.getUser(enteredEmail);
           router.push("/my-feed");
         })
         .catch((err) => {
