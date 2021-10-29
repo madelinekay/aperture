@@ -9,20 +9,22 @@ interface FirebaseImage {
 const UserContext = React.createContext({
   images: [] as FirebaseImage[],
   user: "",
-  getUser: (email) => {},
+  getUser: (email: string) => {},
 });
 
 export const UserContextProvider = (props) => {
   const [images, setImages] = useState<FirebaseImage[]>([]);
-  const [user, setUser] = useState<string>();
+  const [user, setUser] = useState();
   const username = 1; //fix this ///
   // const user = getUser();
 
   const getUser = (user: string) => {
     setUser(user);
-
+    // use token and put inside useeffect?
     console.log("getuser", user);
   };
+
+  console.log("usercontext", user);
 
   const getFromFirebase = (user) => {
     // const storageRef = getStorageRef(userId);
@@ -38,7 +40,6 @@ export const UserContextProvider = (props) => {
       "https://aperture-479c6-default-rtdb.firebaseio.com/users/$user/images.json"
     )
       .then((response) => {
-        console.log("response");
         return response.json();
       })
       .then((data) => {
@@ -57,6 +58,7 @@ export const UserContextProvider = (props) => {
   };
 
   useEffect(() => {
+    getUser();
     getFromFirebase(user);
   }, []);
 

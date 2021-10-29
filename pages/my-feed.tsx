@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import React, { useContext, useCallback } from "react";
-import authContext from "../store/auth-context";
+import AuthContext from "../store/auth-context";
 import { getStorageRef } from "../utils/firebase";
 import UserContext from "../store/user-context";
 import Card from "@material-ui/core/Card";
@@ -31,9 +31,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Profile: NextPage = () => {
-  const ctx = useContext(authContext);
+  const authContext = useContext(AuthContext);
+  console.log("authContext", authContext);
   const { images, user } = useContext(UserContext);
-  console.log("myfeed", user);
+  console.log("myfeed user", user);
   // const userId = +usernamec
 
   const classes = useStyles();

@@ -1,5 +1,5 @@
-import firebase from "firebase/app";
-import "firebase/storage";
+import firebase from "firebase/compat/app";
+import "firebase/compat/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyB8ONxO_Vjxt1HO8DKeoqcsV8ExTUsqof4",
@@ -12,10 +12,14 @@ const firebaseConfig = {
   measurementId: "G-JRQ46M1TP5",
 };
 
+// TODO: extract into firebase service file
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
+export default firebase;
+
 export const getStorageRef = (user: string) => {
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  }
   const app = firebase.apps[0];
 
   const storageRef = app.storage().ref(user);

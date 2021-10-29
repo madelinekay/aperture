@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+// import firebase from "firebase";
 
 import { useFormik } from "formik";
 import Button from "@material-ui/core/Button";
@@ -12,8 +13,10 @@ import { useRouter } from "next/router";
 import AuthContext from "../store/auth-context";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
-import { CardContent } from "@material-ui/core";
+import { CardContent, ClickAwayListener } from "@material-ui/core";
 import UserContext from "../store/user-context";
+
+import firebase from "../utils/firebase";
 
 const useStyles = makeStyles({
   root: {
@@ -65,7 +68,7 @@ const Home: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const userContext = useContext(UserContext);
-  const ctx = useContext(AuthContext);
+  const authContext = useContext(AuthContext);
 
   const classes = useStyles();
 
@@ -81,47 +84,64 @@ const Home: NextPage = () => {
       const enteredPassword = values.password;
       setIsLoading(true);
 
-      fetch(
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyB8ONxO_Vjxt1HO8DKeoqcsV8ExTUsqof4",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            email: enteredEmail,
-            password: enteredPassword,
-            returnSecureToken: true,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
-        .then((res) => {
-          setIsLoading(false);
-
-          if (res.ok) {
-            return res.json();
-          } else {
-            return res.json().then((data) => {
-              let errorMessage = "Authentication failed";
-              if (data.error.message) {
-                errorMessage = data.error.message;
-              }
-              throw new Error(errorMessage);
-            });
-          }
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(enteredEmail, enteredPassword)
+        .then((userCredential) => {
+          // Signed in
+          var user = userCredential.user;
+          console.log("userCredential", userCredential);
+          console.log("user", user);
+          // ...
         })
-        .then((data) => {
-          const expirationTime = new Date(
-            new Date().getTime() + +data.expiresIn * 1000
-          ).getTime();
-          ctx.login(data.idToken, expirationTime);
-          console.log("index fetch");
-          userContext.getUser(enteredEmail);
-          router.push("/my-feed");
-        })
-        .catch((err) => {
-          alert(err.message);
+        .catch((error) => {
+          var errorCode = error.code;
+          var errorMessage = error.message;
         });
+
+      // fetch(
+      //   "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyB8ONxO_Vjxt1HO8DKeoqcsV8ExTUsqof4",
+      //   {
+      //     method: "POST",
+      //     body: JSON.stringify({
+      //       email: enteredEmail,
+      //       password: enteredPassword,
+      //       returnSecureToken: true,
+      //     }),
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //   }
+      // )
+      //   .then((res) => {
+      //     setIsLoading(false);
+
+      //     if (res.ok) {
+      //       return res.json();
+      //     } else {
+      //       return res.json().then((data) => {
+      //         let errorMessage = "Authentication failed";
+      //         if (data.error.message) {
+      //           errorMessage = data.error.message;
+      //         }
+      //         throw new Error(errorMessage);
+      //       });
+      //     }
+      //   })
+      //   .then((data) => {
+      //     const expirationTime = new Date(
+      //       new Date().getTime() + +data.expiresIn * 1000
+      //     ).getTime();
+      //     console.log("data", data);
+      //     debugger;
+      //     authContext.login(data.idToken, expirationTime);
+      //     console.log("index fetch", data.email);
+      //     userContext.getUser(data.email);
+      //     router.push("/my-feed");
+      //   })
+      //   .catch((err) => {
+      //     alert(err.message);
+      //   });
     },
   });
 

@@ -74,7 +74,7 @@ const Signup: NextPage = () => {
         body: JSON.stringify({
           email: email,
           password: password,
-          returnSecureToken: true,
+          returnSecureToken: true, //is this right?
         }),
         headers: {
           "Content-Type": "application/json",
