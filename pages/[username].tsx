@@ -33,21 +33,28 @@ const Home: NextPage = () => {
           marginTop: 30,
         }}
       >
-        {images.map((image) => (
+        {images.map((url) => (
           <div
+            key={url}
             style={{
+
+
+
+              display: "flex",
+              justifyContent: "center",
               overflow: "hidden",
-              maxWidth: 290,
-              maxHeight: 290,
+              width: 290,
+              height: 290,
               marginRight: 30,
               marginBottom: 30,
+              alignItems: "center",
             }}
           >
             <img
-              src={image.id}
-              key={image.url}
-              // style={{ maxHeight: 600, maxWidth: 600 }}
-              //check that this code is relevant
+              src={url}
+              /* align-items: center; */
+              style={{ maxHeight: 600, maxWidth: 600 }}
+            //check that this code is relevant
             />
           </div>
         ))}
