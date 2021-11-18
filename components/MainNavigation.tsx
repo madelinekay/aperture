@@ -1,7 +1,7 @@
 import { FC, useContext } from "react";
 import Link from "next/link";
 import UserContext from "../store/user-context";
-import { AppBar, Toolbar, makeStyles, IconButton } from "@material-ui/core";
+import { AppBar, Toolbar, makeStyles, IconButton, ClickAwayListener } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 import FaceIcon from "@material-ui/icons/Face";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -9,6 +9,7 @@ import PublicIcon from "@material-ui/icons/Public";
 import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
 import AuthContext from "../store/auth-context";
+import { ControlPointDuplicateRounded } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   appbar: {
@@ -48,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
 
 const MainNavigation: FC = () => {
   const { username } = useContext(UserContext);
+  console.log("username", username)
   const classes = useStyles();
   const { isLoggedIn } = useContext(AuthContext);
 
