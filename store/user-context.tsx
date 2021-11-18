@@ -9,7 +9,7 @@ interface FirebaseImage {
 const UserContext = React.createContext({
   images: [] as FirebaseImage[],
   user: "",
-  getUser: (email: string) => {},
+  getUser: (email: string) => { },
 });
 
 export const UserContextProvider = (props) => {
@@ -58,7 +58,7 @@ export const UserContextProvider = (props) => {
   };
 
   useEffect(() => {
-    getUser();
+    getUser(user);
     getFromFirebase(user);
   }, []);
 
