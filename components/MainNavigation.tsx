@@ -53,6 +53,7 @@ const MainNavigation: FC = () => {
   const classes = useStyles();
   const { isLoggedIn } = useContext(AuthContext);
 
+  console.log('isLoggedIn', isLoggedIn);
   if (isLoggedIn) {
     return (
       <AppBar position="sticky" className={classes.appbar}>
