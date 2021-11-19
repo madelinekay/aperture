@@ -1,10 +1,13 @@
+import Layout from "../components/Layout";
+import { UserContextProvider } from "../store/user-context";
+import { AuthContextProvider } from "../store/auth-context";
+import theme from "../store/theme";
+
 import React, { useEffect } from "react";
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
-import Layout from "../components/Layout";
+import { ThemeProvider } from "@material-ui/styles";
 
-import { UserContextProvider } from "../store/user-context";
-import { AuthContextProvider } from "../store/auth-context";
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
@@ -15,13 +18,15 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <AuthContextProvider>
-      <UserContextProvider>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </UserContextProvider>
-    </AuthContextProvider>
+    <ThemeProvider theme={theme}>
+      <AuthContextProvider>
+        <UserContextProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </UserContextProvider>
+      </AuthContextProvider>
+    </ThemeProvider>
   );
 }
 export default MyApp;

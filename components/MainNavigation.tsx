@@ -9,7 +9,6 @@ import PublicIcon from "@material-ui/icons/Public";
 import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
 import AuthContext from "../store/auth-context";
-import { ControlPointDuplicateRounded } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   appbar: {
@@ -27,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     width: "15%",
   },
   navItem: {
-    marginRight: theme.spacing(1),
+    marginRight: theme.spacing(2),
   },
   search: {
     position: "relative",
@@ -49,49 +48,38 @@ const useStyles = makeStyles((theme) => ({
 
 const MainNavigation: FC = () => {
   const { username } = useContext(UserContext);
-  console.log("username", username)
   const classes = useStyles();
   const { isLoggedIn } = useContext(AuthContext);
 
-  console.log('isLoggedIn', isLoggedIn);
   if (isLoggedIn) {
     return (
       <AppBar position="sticky" className={classes.appbar}>
         <Toolbar className={classes.toolbar}>
-          <div className={classes.title}>Açıklık</div>
+          <Link href="/"><div className={classes.title}>Aperture</div></Link>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
             <div className={classes.input}>
-              <InputBase placeholder="ara..." />
+              <InputBase placeholder="search..." />
             </div>
           </div>
-
           <div className={classes.menu}>
             <div className={classes.navItem}>
-              <IconButton color="inherit">
-                <Link href="/my-feed">
-                  <HomeIcon />
-                </Link>
-              </IconButton>
+              <Link href="/my-feed">
+                <HomeIcon />
+              </Link>
             </div>
             <div className={classes.navItem}>
-              <IconButton color="inherit">
-                <Link href={"/" + username.toString()}>
-                  <FaceIcon />
-                </Link>
-              </IconButton>
+              <Link href={"/" + username.toString()}>
+                <FaceIcon />
+              </Link>
             </div>
             <div className={classes.navItem}>
-              <IconButton color="inherit">
-                <FavoriteIcon />
-              </IconButton>
+              <FavoriteIcon />
             </div>
             <div className={classes.navItem}>
-              <IconButton color="inherit">
-                <PublicIcon />
-              </IconButton>
+              <PublicIcon />
             </div>
           </div>
         </Toolbar>

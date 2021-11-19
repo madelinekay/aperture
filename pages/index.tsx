@@ -1,21 +1,16 @@
+import AuthContext from "../store/auth-context";
+
 import type { NextPage } from "next";
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
-
 import { useFormik } from "formik";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import * as yup from "yup";
 import Link from "next/link";
 import { useState, useContext } from "react";
 import { useRouter } from "next/router";
-import AuthContext from "../store/auth-context";
-import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
-import { CardContent } from "@material-ui/core";
+import { CardContent, Button, TextField, Card, CardHeader } from "@material-ui/core";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexDirection: "column",
@@ -41,14 +36,14 @@ const useStyles = makeStyles({
   },
   button: {
     width: "100%",
-    backgroundColor: "black",
+    backgroundColor: theme.palette.primary.main,
   },
   textField: {
     marginBottom: 20,
     width: "100%",
     fontSize: 8,
   },
-});
+}));
 
 const validationSchema = yup.object({
   email: yup
@@ -76,7 +71,6 @@ const Home: NextPage = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log("log in");
       const enteredEmail = values.email;
       const enteredPassword = values.password;
       setIsLoading(true);
@@ -114,8 +108,6 @@ const Home: NextPage = () => {
           const expirationTime = new Date(
             new Date().getTime() + +data.expiresIn * 1000
           ).getTime();
-          console.log("login", data.idToken);
-
           ctx.login(data.idToken, expirationTime);
           router.push("/my-feed");
         })
@@ -147,7 +139,7 @@ const Home: NextPage = () => {
                   name="email"
                   variant="filled"
                   size="small"
-                  placeholder="Email, phone number or username"
+                  placeholder="Email"
                   value={formik.values.email}
                   onChange={formik.handleChange}
                   error={formik.touched.email && Boolean(formik.errors.email)}
@@ -200,30 +192,3 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-
-// <!-- The core Firebase JS SDK is always required and must be listed first -->
-{
-  /* <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-
-<!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#available-libraries -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
-
-<script>
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  var firebaseConfig = {
-    apiKey: "AIzaSyB8ONxO_Vjxt1HO8DKeoqcsV8ExTUsqof4",
-    authDomain: "aperture-479c6.firebaseapp.com",
-    databaseURL: "https://aperture-479c6-default-rtdb.firebaseio.com",
-    projectId: "aperture-479c6",
-    storageBucket: "aperture-479c6.appspot.com",
-    messagingSenderId: "407719756458",
-    appId: "1:407719756458:web:4421b56d4a0d2168fbc6d3",
-    measurementId: "G-JRQ46M1TP5"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  firebase.analytics();
-</script> */
-}

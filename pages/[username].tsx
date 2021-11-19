@@ -1,14 +1,11 @@
-import { getFromFirebase, getStorageRef } from "../utils/firebase";
-import { NextPage } from "next";
 import UserContext from "../store/user-context";
-import { useContext, useEffect } from "react";
-import Image from "next/image";
-import { Hidden } from "@material-ui/core";
+
+import { NextPage } from "next";
+import { useContext } from "react";
 
 const Home: NextPage = () => {
   const { images, username } = useContext(UserContext);
   const padders = Array.from(Array(3 - (images.length % 3)));
-  console.log("username", images);
 
   return (
     <div
@@ -37,9 +34,6 @@ const Home: NextPage = () => {
           <div
             key={url}
             style={{
-
-
-
               display: "flex",
               justifyContent: "center",
               overflow: "hidden",
@@ -52,9 +46,7 @@ const Home: NextPage = () => {
           >
             <img
               src={url}
-              /* align-items: center; */
               style={{ maxHeight: 600, maxWidth: 600 }}
-            //check that this code is relevant
             />
           </div>
         ))}

@@ -11,12 +11,9 @@ export const UserContextProvider = (props) => {
   const username = 1;
 
   const getFromFirebase = (userId) => {
-    console.log('userId', userId)
     const storageRef = getStorageRef(userId);
     storageRef.listAll().then((res) => {
-      console.log('res', res)
       res.items.forEach((imageRef) => {
-        console.log('imageRef', imageRef)
         imageRef.getDownloadURL().then((url) => {
           setImages((images) => [...images, url]);
         });
