@@ -31,8 +31,6 @@ export const UserContextProvider: FC = (props) => {
     getFromFirebase(username);
   }, []);
 
-  console.log('images', images);
-
   const contextValue = {
     images,
     username,

@@ -184,7 +184,7 @@ const Home: NextPage = () => {
           <Card className={classes.signup}>
             <CardContent>
               <div>
-                Don't have an account yet? <Link href="/signup">Sign up</Link>
+                Need an account? <Link href="/signup">Sign up</Link>
               </div>
             </CardContent>
           </Card>
