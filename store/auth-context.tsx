@@ -30,8 +30,8 @@ const retrieveStoredToken = () => {
   console.log('storedExpirationTime', storedExpirationTime);
   const remainingTime = calculateRemainingTime(Number(storedExpirationTime));
 
-  // if (remainingTime <= 6000) {
-  if (remainingTime <= 59 * 60 * 1000) {
+  if (remainingTime <= 6000) {
+    // if (remainingTime <= 59 * 60 * 1000) {
     localStorage.clear();
     return null;
   }

@@ -1,9 +1,7 @@
 import UserContext from "../store/user-context";
-import authContext from "../store/auth-context";
 import { getStorageRef } from "../utils/firebase";
 
-import { NextPage } from "next";
-import React, { useContext } from "react";
+import React, { useContext, FC } from "react";
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
 import FaceIcon from "@material-ui/icons/Face";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
@@ -21,15 +19,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Profile: NextPage = () => {
+const Profile: FC = () => {
   const { images, username } = useContext(UserContext);
   const userId = +username;
 
   const classes = useStyles();
 
   const handleSelectedFile = (files: File[]) => {
-    console.log('files', files);
-    console.log('typeof files', typeof files);
+
     const storageRef = getStorageRef(userId);
     files.forEach(file => {
       const imageRef = storageRef.child(file.name);

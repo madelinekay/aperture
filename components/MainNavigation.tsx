@@ -71,7 +71,7 @@ const MainNavigation: FC = () => {
   }
 
 
-  if (isLoggedIn && route != "/" && route != "/signup") {
+  if (isLoggedIn && route != "/signup") {
     return (
       <AppBar position="sticky" className={classes.appbar}>
         <Toolbar className={classes.toolbar}>
