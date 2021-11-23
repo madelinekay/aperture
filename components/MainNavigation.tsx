@@ -1,7 +1,8 @@
-import { FC, useContext } from "react";
+import { FC, useContext, useState } from "react";
+import React from "react";
 import Link from "next/link";
 import UserContext from "../store/user-context";
-import { AppBar, Toolbar, makeStyles, IconButton, ClickAwayListener } from "@material-ui/core";
+import { AppBar, Toolbar, makeStyles, Menu, MenuItem, Typography } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 import FaceIcon from "@material-ui/icons/Face";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -9,6 +10,7 @@ import PublicIcon from "@material-ui/icons/Public";
 import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
 import AuthContext from "../store/auth-context";
+import { useRouter } from "next/router";
 
 const useStyles = makeStyles((theme) => ({
   appbar: {
@@ -47,15 +49,33 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const MainNavigation: FC = () => {
+  const { route } = useRouter()
   const { username } = useContext(UserContext);
   const classes = useStyles();
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, logout } = useContext(AuthContext);
 
-  if (isLoggedIn) {
+  const [anchorEl, setAnchorEl] = useState<Element | null>(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<Element>) => {
+    console.log('event.currentTarget', event.currentTarget);
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const handleLogout = () => {
+    handleClose();
+    logout();
+  }
+
+
+  if (isLoggedIn && route != "/" && route != "/signup") {
     return (
       <AppBar position="sticky" className={classes.appbar}>
         <Toolbar className={classes.toolbar}>
-          <Link href="/"><div className={classes.title}>Aperture</div></Link>
+          <div style={{ fontSize: 20 }}><Link href="/my-feed"  >Aperture</Link></div>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -71,9 +91,31 @@ const MainNavigation: FC = () => {
               </Link>
             </div>
             <div className={classes.navItem}>
-              <Link href={"/" + username.toString()}>
-                <FaceIcon />
-              </Link>
+
+              <FaceIcon
+                color="inherit"
+                id="basic-button"
+                aria-controls="basic-menu"
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
+              />
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+
+                <Link href={"/" + username.toString()}>
+                  <MenuItem onClick={handleClose}>Profile</MenuItem>
+                </Link>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
+
             </div>
             <div className={classes.navItem}>
               <FavoriteIcon />

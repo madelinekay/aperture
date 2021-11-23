@@ -9,7 +9,11 @@ const theme = createTheme({
     },
     typography: {
         h2: {
-            fontWeight: "bold"
+            color: "black",
+            fontFamily: "Arial, Helvetica, sans-serif",
+            textTransform: "uppercase",
+            letterSpacing: 3,
+            fontSize: 16,
         }
     }
 });

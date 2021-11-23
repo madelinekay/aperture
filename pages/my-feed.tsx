@@ -22,22 +22,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Profile: NextPage = () => {
-  const ctx = useContext(authContext);
   const { images, username } = useContext(UserContext);
   const userId = +username;
 
   const classes = useStyles();
 
-  const handleSelectedFile = (files) => {
-    const file = files[0];
+  const handleSelectedFile = (files: File[]) => {
+    console.log('files', files);
+    console.log('typeof files', typeof files);
     const storageRef = getStorageRef(userId);
-
-    const imageRef = storageRef.child(file.name);
-    const metadata = {
-      time: Date.now().toString(),
-    };
-    imageRef
-      .put(file, { customMetadata: metadata })
+    files.forEach(file => {
+      const imageRef = storageRef.child(file.name);
+      const metadata = {
+        time: Date.now().toString(),
+      };
+      return imageRef
+        .put(file, { customMetadata: metadata })
+    })
   };
 
   return (
@@ -97,9 +98,6 @@ const Profile: NextPage = () => {
                   }}
                 >
                   madelineundis
-                </Typography>
-                <Typography variant="body2" color="black" component="p">
-                  on vacation
                 </Typography>
               </div>
 

@@ -1,26 +1,36 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FC } from "react";
+import { useRouter } from "next/router";
 
-let logoutTimer;
+let logoutTimer: ReturnType<typeof setTimeout>;
 
-const AuthContext = React.createContext({
+interface AuthContext {
+  token: string | null;
+  isLoggedIn: boolean;
+  login: (token: string, time: number) => void;
+  logout: () => void;
+}
+
+const AuthContext = React.createContext<AuthContext>({
   token: "",
   isLoggedIn: false,
-  login: (token, time) => { },
+  login: () => { },
   logout: () => { },
 });
 
-const calculateRemainingTime = (expirationTime) => {
-  const currentTime = new Date().getTime(); //gettime converts to milliseconds for usecallback
+const calculateRemainingTime = (expirationTime: number) => {
+  const currentTime = new Date().getTime();
 
-  const remainingDuration = expirationTime - currentTime; //new Date(expirationTime).getTime() for expirationTime stored in a new constant
+  const remainingDuration = expirationTime - currentTime;
   return remainingDuration;
 };
 
 const retrieveStoredToken = () => {
   const storedToken = localStorage.getItem("token");
   const storedExpirationTime = localStorage.getItem("expirationTime");
-  const remainingTime = calculateRemainingTime(storedExpirationTime);
+  console.log('storedExpirationTime', storedExpirationTime);
+  const remainingTime = calculateRemainingTime(Number(storedExpirationTime));
 
+  // if (remainingTime <= 6000) {
   if (remainingTime <= 59 * 60 * 1000) {
     localStorage.clear();
     return null;
@@ -31,20 +41,21 @@ const retrieveStoredToken = () => {
   };
 };
 
-export const AuthContextProvider = (props) => {
+export const AuthContextProvider: FC = (props) => {
   const ssr = typeof window === "undefined";
   if (ssr) {
-    return props.children;
+    return <>{props.children}</>;
   }
+  const router = useRouter()
 
   const tokenData = retrieveStoredToken();
-  let initialToken;
+  let initialToken: null | string = null;
   if (tokenData) {
     initialToken = tokenData.token;
   }
 
   const [token, setToken] = useState(initialToken);
-  const isLoggedIn = !!token;
+  const isLoggedIn = Boolean(token);
 
   const handleLogout = () => {
     setToken(null);
@@ -54,23 +65,21 @@ export const AuthContextProvider = (props) => {
       clearTimeout(logoutTimer);
     }
 
-    window.location.href = "/";
+    router.push("/")
   };
 
-  const handleLogin = (token, expirationTime) => {
+  const handleLogin = (token: string, expirationTime: number) => {
     setToken(token);
     localStorage.setItem("token", token);
-    localStorage.setItem("expirationTime", expirationTime);
-    console.log("handleLogin token", token);
+    localStorage.setItem("expirationTime", expirationTime.toString());
+
     const storedToken = localStorage.getItem("token");
-    console.log("storedtoken", storedToken);
 
     const remainingTime = calculateRemainingTime(expirationTime);
 
     logoutTimer = setTimeout(handleLogout, remainingTime);
-  };
 
-  console.log("token", token);
+  };
 
   useEffect(() => {
     if (tokenData) {

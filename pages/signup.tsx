@@ -62,7 +62,7 @@ const Signup: NextPage = () => {
   const router = useRouter();
   const ctx = useContext(AuthContext);
 
-  const auth = (email, password) => {
+  const auth = (email: string, password: string) => {
     fetch(
       "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB8ONxO_Vjxt1HO8DKeoqcsV8ExTUsqof4",
       {
@@ -88,7 +88,7 @@ const Signup: NextPage = () => {
             if (data.error.message) {
               errorMessage = data.error.message;
             }
-            throw new Error(errorMessage); å
+            throw new Error(errorMessage);
           });
         }
       })
