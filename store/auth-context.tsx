@@ -27,7 +27,6 @@ const calculateRemainingTime = (expirationTime: number) => {
 const retrieveStoredToken = () => {
   const storedToken = localStorage.getItem("token");
   const storedExpirationTime = localStorage.getItem("expirationTime");
-  console.log('storedExpirationTime', storedExpirationTime);
   const remainingTime = calculateRemainingTime(Number(storedExpirationTime));
 
   if (remainingTime <= 6000) {
@@ -83,9 +82,7 @@ export const AuthContextProvider: FC = (props) => {
 
   useEffect(() => {
     if (tokenData) {
-      console.log("useEffect", tokenData.remainingTime);
       logoutTimer = setTimeout(handleLogout, tokenData.remainingTime);
-      console.log("here we should load user data using token", tokenData.token);
     }
   }, [tokenData]);
 

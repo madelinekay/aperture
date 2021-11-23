@@ -117,10 +117,10 @@ const Profile: FC = () => {
                 <InsertEmoticonIcon />
               </IconButton>
               <InputBase
-                placeholder="yorum ekle..."
+                placeholder="Comment..."
                 className={classes.search}
               />
-              <Button style={{ opacity: 0.5 }}>Paylaş</Button>
+              <Button style={{ opacity: 0.5 }}>Share</Button>
             </CardActions>
           </Card>
         ))}

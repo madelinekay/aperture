@@ -58,7 +58,6 @@ const MainNavigation: FC = () => {
   const open = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<Element>) => {
-    console.log('event.currentTarget', event.currentTarget);
     setAnchorEl(event.currentTarget);
   };
 
@@ -75,7 +74,7 @@ const MainNavigation: FC = () => {
     return (
       <AppBar position="sticky" className={classes.appbar}>
         <Toolbar className={classes.toolbar}>
-          <div style={{ fontSize: 20 }}><Link href="/my-feed"  >Aperture</Link></div>
+          <div style={{ fontSize: 20 }}><Link href="/"  >Aperture</Link></div>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -86,7 +85,7 @@ const MainNavigation: FC = () => {
           </div>
           <div className={classes.menu}>
             <div className={classes.navItem}>
-              <Link href="/my-feed">
+              <Link href="/">
                 <HomeIcon />
               </Link>
             </div>
