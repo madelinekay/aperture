@@ -1,11 +1,12 @@
+import React, { FC } from "react";
 import MainNavigation from "./MainNavigation";
 
-const Layout = (props) => {
+const Layout: FC = (props) => {
   return (
-    <div>
+    <>
       <MainNavigation />
       <main>{props.children}</main>
-    </div>
+    </>
   );
 };
 

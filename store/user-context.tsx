@@ -1,16 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FC } from "react";
 import { getStorageRef } from "../utils/firebase";
 
-const UserContext = React.createContext({
+interface UserContext {
+  images: string[],
+  username: number | string,
+}
+
+const UserContext = React.createContext<UserContext>({
   images: [],
   username: "",
 });
 
-export const UserContextProvider = (props) => {
-  const [images, setImages] = useState<any>([]);
+export const UserContextProvider: FC = (props) => {
+
+  const [images, setImages] = useState<string[]>([]);
   const username = 1;
 
-  const getFromFirebase = (userId) => {
+  const getFromFirebase = (userId: number) => {
     const storageRef = getStorageRef(userId);
     storageRef.listAll().then((res) => {
       res.items.forEach((imageRef) => {

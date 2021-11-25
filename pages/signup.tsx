@@ -1,18 +1,46 @@
+import AuthContext from "../store/auth-context";
+
 import { NextPage } from "next";
-import TextField from "@material-ui/core/TextField";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
 import Link from "next/link";
 import { useState, useContext } from "react";
 import { useRouter } from "next/router";
-import AuthContext from "../store/auth-context";
 import signup from "./api/signup";
+import { CardContent, Card, CardHeader, makeStyles, Button, TextField } from "@material-ui/core";
 
 const useStyles = makeStyles({
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    minHeight: "100vh",
+  },
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    width: 350,
+    height: 400,
+    border: "black",
+    alignItems: "center",
+    marginBottom: 50,
+  },
+  signup: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 350,
+    height: 75,
+  },
   button: {
     width: "100%",
+    backgroundColor: "black",
+  },
+  textField: {
+    marginBottom: 20,
+    width: "100%",
+    fontSize: 8,
   },
 });
 
@@ -34,7 +62,7 @@ const Signup: NextPage = () => {
   const router = useRouter();
   const ctx = useContext(AuthContext);
 
-  const auth = (email, password) => {
+  const auth = (email: string, password: string) => {
     fetch(
       "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB8ONxO_Vjxt1HO8DKeoqcsV8ExTUsqof4",
       {
@@ -53,7 +81,6 @@ const Signup: NextPage = () => {
         setIsLoading(false);
 
         if (res.ok) {
-          console.log("res ok");
           return res.json();
         } else {
           return res.json().then((data) => {
@@ -112,57 +139,78 @@ const Signup: NextPage = () => {
   });
 
   return (
-    <div>
-      <form onSubmit={formik.handleSubmit}>
-        <h1>Aperture</h1>
-        <div>
-          <TextField
-            id="email"
-            name="email"
-            placeholder="Email or phone number"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            error={formik.touched.email && Boolean(formik.errors.email)}
-            helperText={formik.touched.email && formik.errors.email}
-          />
-        </div>
-        <div>
-          <TextField
-            id="username"
-            name="username"
-            placeholder="Username"
-            value={formik.values.username}
-            onChange={formik.handleChange}
-            error={formik.touched.username && Boolean(formik.errors.username)}
-            helperText={formik.touched.username && formik.errors.username}
-          />
-        </div>
-        <div>
-          <TextField
-            id="password"
-            name="password"
-            placeholder="password"
-            type="password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            error={formik.touched.password && Boolean(formik.errors.password)}
-            helperText={formik.touched.password && formik.errors.password}
-          />
-        </div>
-        <div>
-          <Button
-            className={classes.button}
-            variant="contained"
-            color="primary"
-            type="submit"
-          >
-            Sign Up
-          </Button>
-        </div>
-      </form>
-      <div>
-        Already have an account? <Link href="/">Log in</Link>
-      </div>
+    <div className={classes.root}>
+      <Card className={classes.container}>
+        <CardHeader title="Aperture" style={{ marginBottom: 30 }} />
+        <CardContent style={{ width: "85%" }}>
+          <form onSubmit={formik.handleSubmit}>
+            <div>
+              <TextField
+                className={classes.textField}
+                variant="filled"
+                size="small"
+                id="email"
+                name="email"
+                placeholder="Email or phone number"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                error={formik.touched.email && Boolean(formik.errors.email)}
+                helperText={formik.touched.email && formik.errors.email}
+              />
+            </div>
+            <div>
+              <TextField
+                className={classes.textField}
+                variant="filled"
+                size="small"
+                id="username"
+                name="username"
+                placeholder="Username"
+                value={formik.values.username}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.username && Boolean(formik.errors.username)
+                }
+                helperText={formik.touched.username && formik.errors.username}
+              />
+            </div>
+            <div>
+              <TextField
+                className={classes.textField}
+                variant="filled"
+                size="small"
+                id="password"
+                name="password"
+                placeholder="password"
+                type="password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.password && Boolean(formik.errors.password)
+                }
+                helperText={formik.touched.password && formik.errors.password}
+              />
+            </div>
+            <div>
+              <Button
+                className={classes.button}
+                variant="contained"
+                color="primary"
+                type="submit"
+              >
+                Sign Up
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+      <Card className={classes.signup}>
+        <CardContent>
+          <div>
+            Already have an account? <Link href="/">Log in</Link>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
