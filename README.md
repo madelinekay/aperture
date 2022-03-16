@@ -15,7 +15,7 @@ Ongoing project that allows users to post and display photography. Future update
 
 <img  src="assets/Screen Shot 2022-03-14 at 8.00.45 PM.png">
 
-## Log-in/Sign-up
+## Login or signup
 
 
 <img src="assets/Screen Shot 2022-03-14 at 7.59.32 PM.png" >
