@@ -1,7 +1,7 @@
 
 # Aperture
 
-Ongoing project that allows users to post and display photography. Future updates will include the ability to react to posts, and create and share collaborative albums. 
+(Instagram clone)[https://apertura.netlify.app/] that allows users to post and display photography. Future updates will include the ability to react to posts, and create and share collaborative albums. 
 
 
 ## Homepage
@@ -12,10 +12,9 @@ Ongoing project that allows users to post and display photography. Future update
 
 ## Profile 
 
-
 <img  src="assets/Screen Shot 2022-03-14 at 8.00.45 PM.png">
 
 ## Login or signup
-
+#
 
 <img src="assets/Screen Shot 2022-03-14 at 7.59.32 PM.png" >
