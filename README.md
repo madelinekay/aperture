@@ -1,7 +1,7 @@
 
 # Aperture
 
-(Instagram clone)[https://apertura.netlify.app/] that allows users to post and display photography. Future updates will include the ability to react to posts, and create and share collaborative albums. 
+[Instagram clone](https://apertura.netlify.app/) that allows users to post and display photography. Future updates will include the ability to react to posts, and create and share collaborative albums. 
 
 
 ## Homepage
